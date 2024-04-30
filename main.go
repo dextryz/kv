@@ -3,9 +3,7 @@ package main
 import (
 	"encoding/gob"
 	"errors"
-	"io"
 	"io/fs"
-	"log"
 	"log/slog"
 	"os"
 )
@@ -28,13 +26,13 @@ func Open(filepath string) (*Store, error) {
 		return &s, nil
 	}
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer f.Close()
 
 	err = gob.NewDecoder(f).Decode(&s.data)
-	if err != nil && err != io.EOF {
-		log.Fatal("encode error:", err)
+	if err != nil {
+		return nil, err
 	}
 
 	return &s, nil
