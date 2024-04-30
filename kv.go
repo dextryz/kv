@@ -1,4 +1,4 @@
-package main
+package kv
 
 import (
 	"encoding/gob"
@@ -8,14 +8,14 @@ import (
 	"os"
 )
 
-type Store struct {
+type store struct {
 	data map[string]string
 	path string
 }
 
-func Open(filepath string) (*Store, error) {
+func Open(filepath string) (*store, error) {
 
-	s := Store{
+	s := store{
 		data: make(map[string]string),
 		path: filepath,
 	}
@@ -38,11 +38,11 @@ func Open(filepath string) (*Store, error) {
 	return &s, nil
 }
 
-func (s *Store) Set(key, value string) {
+func (s *store) Set(key, value string) {
 	s.data[key] = value
 }
 
-func (s Store) Get(key string) (string, bool) {
+func (s store) Get(key string) (string, bool) {
 	v, ok := s.data[key]
 	if !ok {
 		return "", false
@@ -50,7 +50,7 @@ func (s Store) Get(key string) (string, bool) {
 	return v, true
 }
 
-func (s Store) Save() error {
+func (s store) Save() error {
 
 	f, err := os.Create(s.path)
 	if err != nil {
